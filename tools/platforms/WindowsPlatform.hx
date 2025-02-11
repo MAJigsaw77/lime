@@ -570,6 +570,13 @@ class WindowsPlatform extends PlatformTarget
 					flags.push("-Dno_console");
 				}
 
+				if (project.window.allowHighDPI)
+				{
+					haxeArgs.push("-D");
+					haxeArgs.push("manifestFile=ApplicationMain.xml");
+					flags.push("-DmanifestFile=ApplicationMain.xml");
+				}
+
 				if (!project.targetFlags.exists("static"))
 				{
 					System.runCommand("", "haxe", haxeArgs);
@@ -1012,6 +1019,11 @@ class WindowsPlatform extends PlatformTarget
 		}
 		else if (targetType == "cpp")
 		{
+			if (project.window.allowHighDPI)
+			{
+				ProjectHelper.recursiveSmartCopyTemplate(project, "windows/manifest", targetDirectory + "/obj", context);
+			}
+
 			ProjectHelper.recursiveSmartCopyTemplate(project, "windows/resource", targetDirectory + "/obj", context);
 
 			if (project.targetFlags.exists("static"))
